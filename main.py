@@ -67,3 +67,57 @@ def print_menu():
        3. Summary (50 words)
        4. Exit 
        ============ """)
+    
+
+def main():
+    image_path=input(f"{Fore.BLUE} Enter the path for the text generation: {Style.RESET_ALL}")
+    if not os.path.exists(image_path):
+       print(f"{Fore.RED} X The file '{image_path}' does not exist.")
+       return
+    try:
+        image = Image.open(image_path) #Just to validate the image
+    except Exception as e:
+        print(f"{Fore.RED} X Failed to open image: {e}")
+        return
+    
+    try:
+        basic_caption = get_basic_caption(image_path)
+        print(f"{Fore.YELLOW}📝 Basic caption: {Style.BRIGHT}{basic_caption}\n")
+
+    except Exception as e:
+        print(f"{Fore.RED}❌ Could not generate caption: {e}")
+        return
+    
+    while True:
+        print_menu()
+        choice = input (f" {Fore.CYAN} Enter your choice (1-4): {Style. RESET_ALL}")
+        if choice == "1":
+            caption = truncate_text(basic_caption, 5)
+            print(f"{Fore. GREEN} Caption (5 words): {Style. BRIGHT}{caption}\n")
+        elif choice == "2":
+            prompt_text = f"Expand the following caption into a detailed description in 30 words: {basic_caption}"
+            try:
+                generated = generate_text(prompt_text, max_new_tokens=40)
+                description = truncate_text(generated, 30)
+                print(f" {Fore. GREEN} Description (30 words): {Style.BRIGHT}{description}\n")
+                      
+            except Exception as e:
+                print(f"{Fore.RED} X Failed to generate description: {e}")
+
+        elif choice == "3":
+            prompt_text = f"Summarize the content of the image described by caption to 50 words: {basic_caption}"
+            
+            try:
+                generated = generate_text(prompt_text, max_new_tokens=60)
+                summary = truncate_text(generated, 50)
+                print(f"{Fore.GREEN}Summary (50 words): {Style.BRIGHT}{summary}\n")
+            
+            except Exception as e:
+                print(f"{Fore.RED} Failed to generate summary: {e}")
+
+        elif choice == "4":
+            print(f"{Fore.GREEN} Goodbye!")
+            break
+
+if __name__ == "__main__":
+    main()
