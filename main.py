@@ -7,15 +7,15 @@ import json
 
 init()
 
-def query_hf_api (api_url, payload=None, files=None, method="post"):
+def query_hf_api(api_url, payload=None, files=None, method="post"):
     headers = {
-        "Authorization": "Bearer {HF_API_KEY}",
+        "Authorization": f"Bearer {HF_API_KEY}",
         "Content-Type": "application/json"
     }
     try:
         response = requests.post(api_url, headers=headers, json=payload)
         if response.status_code != 200:
-            raise Exception("Status {response.status_code}: {response.text}")
+            raise Exception(f"Status {response.status_code}: {response.text}")
         return response.content
     except Exception as e:
         print("{Fore.RED} X Error while calling API: {e}")
@@ -118,6 +118,9 @@ def main():
         elif choice == "4":
             print(f"{Fore.GREEN} Goodbye!")
             break
+
+        else:
+            print(f"{Fore.RED} invalid choice, please enter number between 1 and 4")
 
 if __name__ == "__main__":
     main()
